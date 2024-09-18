@@ -1,0 +1,12 @@
+FROM snipe/snipe-it:v7.0.12
+
+# Installing PostgreSQL PHP extension so Snipe-IT can connect to a PostgreSQL database
+# and PostgreSQL client so Backups can be taken from Snipe-IT Admin page
+RUN apt-get update && apt-get install -y php-pgsql postgresql-client && rm -rf /var/lib/apt/lists/*
+
+# Applying several patches based on the conversation here: https://github.com/snipe/snipe-it/pull/14794
+# Security/Labels sections in Snipe-IT Admin page still cannot be saved
+RUN sed -i "s/\$setting->require_accept_signature = \$request->input('require_accept_signature');/\$setting->require_accept_signature = \$request->input('require_accept_signature', '0');/" app/Http/Controllers/SettingsController.php
+RUN sed -i "s/'login_remote_user_enabled'\s*=>\s*'numeric|nullable'/'login_remote_user_enabled'           => 'boolean|nullable'/" app/Models/Setting.php
+RUN sed -i "s/'login_common_disabled'\s*=>\s*'numeric|nullable'/'login_common_disabled'               => 'boolean|nullable'/" app/Models/Setting.php
+RUN sed -i "s/href=\"{{ url(mix('css\/dist\/skins\/skin-'.(\$snipeSettings->skin!='' ? \$snipeSettings->skin : 'blue').'.css')) }}\"/href=\"{{ url(mix('css\/dist\/skins\/skin-'.(\$snipeSettings->skin!='' ? trim(\$snipeSettings->skin) : 'blue').'.css')) }}\"/" resources/views/layouts/default.blade.php
