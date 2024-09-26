@@ -12,7 +12,8 @@ RUN sed -i "s/'login_common_disabled'\s*=>\s*'numeric|nullable'/'login_common_di
 RUN sed -i "s/href=\"{{ url(mix('css\/dist\/skins\/skin-'.(\$snipeSettings->skin!='' ? \$snipeSettings->skin : 'blue').'.css')) }}\"/href=\"{{ url(mix('css\/dist\/skins\/skin-'.(\$snipeSettings->skin!='' ? trim(\$snipeSettings->skin) : 'blue').'.css')) }}\"/" resources/views/layouts/default.blade.php
 
 # Applying patches for non-AWS S3 compatibility
-RUN sed -i "/'url' => env('PUBLIC_AWS_URL'),/a \            'endpoint' => env('PUBLIC_AWS_ENDPOINT')," config/filesystems.php
-RUN sed -i "/'endpoint' => env('PUBLIC_AWS_ENDPOINT'),/a \            'use_path_style_endpoint' => env('PUBLIC_AWS_USE_PATH_STYLE_ENDPOINT', false)," config/filesystems.php
 RUN sed -i "/'url' => env('PRIVATE_AWS_URL'),/a \            'endpoint' => env('PRIVATE_AWS_ENDPOINT')," config/filesystems.php
 RUN sed -i "/'endpoint' => env('PRIVATE_AWS_ENDPOINT'),/a \            'use_path_style_endpoint' => env('PRIVATE_AWS_USE_PATH_STYLE_ENDPOINT', false)," config/filesystems.php
+RUN sed -i "/'url' => env('PUBLIC_AWS_URL'),/a \            'endpoint' => env('PUBLIC_AWS_ENDPOINT')," config/filesystems.php
+RUN sed -i "/'endpoint' => env('PUBLIC_AWS_ENDPOINT'),/a \            'use_path_style_endpoint' => env('PUBLIC_AWS_USE_PATH_STYLE_ENDPOINT', false)," config/filesystems.php
+RUN sed -i "s/\.env('PUBLIC_AWS_URL')\.'/.env('PUBLIC_AWS_URL').' '.env('PUBLIC_AWS_ENDPOINT').'/" app/Http/Middleware/SecurityHeaders.php
