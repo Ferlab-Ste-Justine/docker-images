@@ -17,3 +17,4 @@ RUN sed -i "/'endpoint' => env('PRIVATE_AWS_ENDPOINT'),/a \            'use_path
 RUN sed -i "/'url' => env('PUBLIC_AWS_URL'),/a \            'endpoint' => env('PUBLIC_AWS_ENDPOINT')," config/filesystems.php
 RUN sed -i "/'endpoint' => env('PUBLIC_AWS_ENDPOINT'),/a \            'use_path_style_endpoint' => env('PUBLIC_AWS_USE_PATH_STYLE_ENDPOINT', false)," config/filesystems.php
 RUN sed -i "s/\.env('PUBLIC_AWS_URL')\.'/.env('PUBLIC_AWS_URL').' '.env('PUBLIC_AWS_ENDPOINT').'/" app/Http/Middleware/SecurityHeaders.php
+RUN sed -i "s|src=\"{{ Storage::disk('public')->url('')\.e(\$snipeSettings->logo) }}|src=\"{{ Storage::disk('public')->url(\$snipeSettings->logo) }}|g" resources/views/layouts/basic.blade.php
