@@ -27,6 +27,8 @@ RUN curl -fsSLO "https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/releas
 && chmod +x kubectl \
 && mv kubectl /usr/local/bin/kubectl
 
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
 WORKDIR /workspace
 
 CMD ["/bin/bash"]
