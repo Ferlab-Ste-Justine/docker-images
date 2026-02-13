@@ -1,11 +1,11 @@
-name: Build and Publish Python Requests Custom Image on Using Semver Tag
+name: Build and Publish Python Requests Image on Using Semver Tag
 
 on:
   push:
     tags:
-      - 'python-requests-custom-v*'
+      - 'python-requests-v*'
     paths:
-      - Dockerfile.python-requests-custom
+      - Dockerfile.python-requests
 
 jobs:
   build:
@@ -16,13 +16,13 @@ jobs:
 
       - name: Extract Version Tag
         id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/python-requests-custom-v}" >> $GITHUB_ENV
+        run: echo "VERSION=${GITHUB_REF#refs/tags/python-requests-v}" >> $GITHUB_ENV
 
       - name: Publish Ferlease Image
         uses: Ferlab-Ste-Justine/action-push-image@v2
         with:
           username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}
           password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
-          image: ferlabcrsj/python-requests-custom
+          image: ferlabcrsj/python-requests
           tag_format: "${{ env.VERSION }}"
-          dockerfile: "Dockerfile.python-requests-custom"
+          dockerfile: "Dockerfile.python-requests"
