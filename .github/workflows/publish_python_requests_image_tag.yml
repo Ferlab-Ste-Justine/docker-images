@@ -8,7 +8,7 @@ on:
       - Dockerfile.python-requests
 
 jobs:
-  build:
+  publish:
     name: Publish Image
     runs-on: ubuntu-22.04
     steps:
@@ -18,7 +18,7 @@ jobs:
         id: version
         run: echo "VERSION=${GITHUB_REF#refs/tags/python-requests-v}" >> $GITHUB_ENV
 
-      - name: Publish Ferlease Image
+      - name: Publish Python Requests Image
         uses: Ferlab-Ste-Justine/action-push-image@v2
         with:
           username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}

@@ -1,0 +1,11 @@
+FROM debian:bullseye-slim
+
+ARG KUBECTL_VERSION=v1.33.8
+
+RUN apt-get update && apt-get install -y curl
+
+RUN curl -fsSLo /usr/local/bin/kubectl "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" \
+ && curl -fsSLo /usr/local/bin/kubectl.sha256 "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256" \
+ && echo "$(cat /usr/local/bin/kubectl.sha256)  /usr/local/bin/kubectl" | sha256sum -c - \
+ && chmod +x /usr/local/bin/kubectl \
+ && rm /usr/local/bin/kubectl.sha256

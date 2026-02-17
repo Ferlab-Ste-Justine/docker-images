@@ -1,11 +1,11 @@
-name: Build and Publish Snipe-IT Custom Image on Using Semver Tag
+name: Build and Publish Kubectl Image on Using Semver Tag
 
 on:
   push:
     tags:
-      - 'snipeit-custom-v*'
+      - 'kubectl-v*'
     paths:
-      - Dockerfile.snipeit-custom
+      - Dockerfile.kubectl
 
 jobs:
   publish:
@@ -16,13 +16,13 @@ jobs:
 
       - name: Extract Version Tag
         id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/snipeit-custom-v}" >> $GITHUB_ENV
+        run: echo "VERSION=${GITHUB_REF#refs/tags/kubectl-v}" >> $GITHUB_ENV
 
-      - name: Publish SnipeIT Custom Image
+      - name: Publish Kubectl Image
         uses: Ferlab-Ste-Justine/action-push-image@v2
         with:
           username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}
           password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
-          image: ferlabcrsj/snipeit-custom
+          image: ferlabcrsj/kubectl
           tag_format: "${{ env.VERSION }}"
-          dockerfile: "Dockerfile.snipeit-custom"
+          dockerfile: "Dockerfile.kubectl"
