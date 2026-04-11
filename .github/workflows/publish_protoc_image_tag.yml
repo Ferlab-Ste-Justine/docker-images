@@ -1,0 +1,28 @@
+name: Build and Publish Protoc Image on Using Semver Tag
+
+on:
+  push:
+    tags:
+      - 'protoc-v*'
+    paths:
+      - Dockerfile.protoc
+
+jobs:
+  publish:
+    name: Publish Image
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Extract Version Tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/protoc-v}" >> $GITHUB_ENV
+
+      - name: Publish Protoc Image
+        uses: Ferlab-Ste-Justine/action-push-image@v2
+        with:
+          username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}
+          password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
+          image: ferlabcrsj/protoc
+          tag_format: "${{ env.VERSION }}"
+          dockerfile: "Dockerfile.protoc"
