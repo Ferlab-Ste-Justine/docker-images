@@ -1,0 +1,28 @@
+name: Build and Publish Lustre Tools Image on Semver Tag
+
+on:
+  push:
+    tags:
+      - 'lustre-tools-v*'
+    paths:
+      - lustre-tools/Dockerfile
+
+jobs:
+  publish:
+    name: Publish Image
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Extract Version Tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/lustre-tools-v}" >> $GITHUB_ENV
+
+      - name: Publish Lustre Tools Image
+        uses: Ferlab-Ste-Justine/action-push-image@v2
+        with:
+          username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}
+          password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
+          image: ferlabcrsj/lustre-tools
+          tag_format: "${{ env.VERSION }}"
+          dockerfile: "lustre-tools/Dockerfile"
