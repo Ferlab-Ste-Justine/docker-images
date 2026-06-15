@@ -1,0 +1,28 @@
+name: Build and Publish dcm2niix Image Using Semver Tag
+
+on:
+  push:
+    tags:
+      - 'dcm2niix-v*'
+    paths:
+      - Dockerfile.dcm2niix
+
+jobs:
+  publish:
+    name: Publish Image
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Extract Version Tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/dcm2niix-v}" >> $GITHUB_ENV
+
+      - name: Publish dcm2niix Image
+        uses: Ferlab-Ste-Justine/action-push-image@v2
+        with:
+          username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}
+          password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
+          image: ferlabcrsj/dcm2niix
+          tag_format: "${{ env.VERSION }}"
+          dockerfile: "Dockerfile.dcm2niix"

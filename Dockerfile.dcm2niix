@@ -1,0 +1,10 @@
+FROM debian:bookworm-slim
+
+ARG DCM2NIIX_VERSION=v1.0.20260416
+
+RUN apt-get update && apt-get install -y curl unzip \
+ && curl -fsSLo /tmp/dcm2niix_lnx.zip "https://github.com/rordenlab/dcm2niix/releases/download/${DCM2NIIX_VERSION}/dcm2niix_lnx.zip" \
+ && unzip /tmp/dcm2niix_lnx.zip -d /usr/local/bin/ \
+ && chmod +x /usr/local/bin/dcm2niix \
+ && rm /tmp/dcm2niix_lnx.zip \
+ && apt-get remove -y curl unzip && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
