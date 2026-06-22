@@ -1,0 +1,9 @@
+provider_installation {
+  filesystem_mirror {
+    path    = "/usr/local/share/terraform/mirror"
+    include = ["registry.terraform.io/keycloak/keycloak", "registry.terraform.io/cyrilgdn/postgresql"]
+  }
+  direct {
+    exclude = ["registry.terraform.io/keycloak/keycloak", "registry.terraform.io/cyrilgdn/postgresql"]
+  }
+}
