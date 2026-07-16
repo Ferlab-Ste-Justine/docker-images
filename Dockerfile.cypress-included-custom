@@ -29,4 +29,6 @@ COPY --from=aws-cli-installer /usr/local/bin/aws /usr/local/bin/aws
 
 ENV PATH="/usr/local/aws-cli/v2/current/bin:$PATH"
 
-RUN apt-get update && apt-get install -y build-essential curl
+RUN apt-get update && apt-get install -y build-essential curl && \
+    npm install -g n && n 20 && \
+    cypress install
