@@ -20,20 +20,13 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && ./aws/install
 
 # Stage 3: Cypress base image with MinIO Client and AWS CLI copied over
-FROM cypress/included:12.10.0
+FROM cypress/included:15.11.0
 
-# Copy MinIO Client from the Alpine stage
 COPY --from=minio-installer /usr/local/bin/mc /usr/local/bin/mc
 
-# Copy AWS CLI from the installer stage
 COPY --from=aws-cli-installer /usr/local/aws-cli /usr/local/aws-cli
 COPY --from=aws-cli-installer /usr/local/bin/aws /usr/local/bin/aws
 
-# Ensure necessary shared libraries are available
 ENV PATH="/usr/local/aws-cli/v2/current/bin:$PATH"
 
-# Remove duplicate entries and update apt package lists, then install build-essential
-RUN sed -i '/google/d' /etc/apt/sources.list.d/* \
-    && echo "deb http://archive.debian.org/debian bullseye main" > /etc/apt/sources.list \
-    && apt-get update \
-    && apt-get install -y build-essential curl
+RUN apt-get update && apt-get install -y build-essential curl
