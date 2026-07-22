@@ -1,0 +1,28 @@
+name: Build and Publish AWS Shell Image on Semver Tag
+
+on:
+  push:
+    tags:
+      - 'aws-shell-v*'
+    paths:
+      - aws-shell/Dockerfile
+
+jobs:
+  publish:
+    name: Publish Image
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Extract Version Tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/aws-shell-v}" >> $GITHUB_ENV
+
+      - name: Publish AWS Shell Image
+        uses: Ferlab-Ste-Justine/action-push-image@v2
+        with:
+          username: ${{ secrets.FERLAB_DOCKER_HUB_USER }}
+          password: ${{ secrets.FERLAB_DOCKER_HUB_TOKEN }}
+          image: ferlabcrsj/aws-shell
+          tag_format: "${{ env.VERSION }}"
+          dockerfile: "aws-shell/Dockerfile"
