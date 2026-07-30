@@ -19,4 +19,4 @@ RUN yum install -y python3.11 python3.11-pip \
 
 RUN dnf install -y https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
 
-COPY aws_*.sh /usr/local/bin/
+COPY aws-shell/aws_*.sh /usr/local/bin/
