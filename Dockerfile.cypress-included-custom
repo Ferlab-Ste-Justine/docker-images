@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS aws-cli-installer
+FROM debian:bookworm-slim AS aws-cli-installer
 
 RUN apt-get update && apt-get install -y curl unzip
 
