@@ -1,28 +1,12 @@
-# Stage 1: Alpine based stage to install MinIO Client
-FROM alpine:latest as minio-installer
+FROM debian:bullseye-slim AS aws-cli-installer
 
-# Install wget and ca-certificates for HTTPS connections
-RUN apk --no-cache add wget ca-certificates
-
-# Download and install MinIO Client
-RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc \
-    && chmod +x /usr/local/bin/mc
-
-# Stage 2: Base image to install AWS CLI using the official installer
-FROM debian:bullseye-slim as aws-cli-installer
-
-# Install necessary dependencies
 RUN apt-get update && apt-get install -y curl unzip
 
-# Download and install the official AWS CLI v2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install
 
-# Stage 3: Cypress base image with MinIO Client and AWS CLI copied over
 FROM cypress/included:15.21.1
-
-COPY --from=minio-installer /usr/local/bin/mc /usr/local/bin/mc
 
 COPY --from=aws-cli-installer /usr/local/aws-cli /usr/local/aws-cli
 COPY --from=aws-cli-installer /usr/local/bin/aws /usr/local/bin/aws
