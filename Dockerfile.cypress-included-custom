@@ -20,7 +20,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && ./aws/install
 
 # Stage 3: Cypress base image with MinIO Client and AWS CLI copied over
-FROM cypress/included:15.11.0
+FROM cypress/included:15.21.1
 
 COPY --from=minio-installer /usr/local/bin/mc /usr/local/bin/mc
 
