@@ -1,3 +1,14 @@
+FROM debian:bookworm-slim AS minio-installer
+
+ARG MC_RELEASE=RELEASE.2025-08-13T08-35-41Z
+ARG MC_SHA256=01f866e9c5f9b87c2b09116fa5d7c06695b106242d829a8bb32990c00312e891
+
+RUN apt-get update && apt-get install -y curl ca-certificates
+
+RUN curl -fsSL "https://github.com/minio/mc/releases/download/${MC_RELEASE}/mc.linux-amd64.${MC_RELEASE}" -o /usr/local/bin/mc \
+    && echo "${MC_SHA256}  /usr/local/bin/mc" | sha256sum -c - \
+    && chmod +x /usr/local/bin/mc
+
 FROM debian:bookworm-slim AS aws-cli-installer
 
 RUN apt-get update && apt-get install -y curl unzip
@@ -7,6 +18,8 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && ./aws/install
 
 FROM cypress/included:15.21.1
+
+COPY --from=minio-installer /usr/local/bin/mc /usr/local/bin/mc
 
 COPY --from=aws-cli-installer /usr/local/aws-cli /usr/local/aws-cli
 COPY --from=aws-cli-installer /usr/local/bin/aws /usr/local/bin/aws
